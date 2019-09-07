@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "talk-bot"
+name = "ChessBot"
 version = "0.1.0"
 description = ""
 authors = ["John Victor <johnvictorfs@gmail.com>", "Guilherme Vasconcelos"]
