@@ -2,7 +2,7 @@
 name = "talk-bot"
 version = "0.1.0"
 description = ""
-authors = ["John Victor <johnvictorfs@gmail.com>"]
+authors = ["John Victor <johnvictorfs@gmail.com>", "Guilherme Vasconcelos"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
