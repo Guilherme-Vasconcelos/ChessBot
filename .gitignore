@@ -112,3 +112,6 @@ db_credentials.json
 # Editor files
 .idea/
 .vscode/
+
+# Database files
+*.db
