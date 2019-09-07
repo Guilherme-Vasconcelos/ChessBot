@@ -1,8 +1,19 @@
-# discord_bot_template
+# ChessBot
 
-#### A discord bot template, inspired by [SourSpoon's old discord bot template](https://github.com/SourSpoon/Discord.py-Template). Made in Python using the [discord.py](https://github.com/Rapptz/discord.py) library.
+[![License:MIT](https://img.shields.io/github/license/Guilherme-Vasconcelos/ChessBot.svg?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Discord:Online](https://img.shields.io/discord/571131331464134686.svg?style=for-the-badge&logo=discord)](https://discord.gg/HcTJsyd)
 
-***
+![ChessBot Logo](images/logo.png)
+
+**(Work in Progress)**
+
+A discord Bot made with Python to play Chess with others on Discord.
+
+---
+
+### Authors:
+
+-   [Guilherme](https://github.com/Guilherme-Vasconcelos)
+-   [John Victor](https://github.com/johnvictofs)
 
 #### Setup
 
