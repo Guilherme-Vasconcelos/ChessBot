@@ -3,8 +3,6 @@ from discord.ext import commands
 import discord
 from bot.bot_client import Bot
 
-board = chess.Board()
-
 
 class Chess(commands.Cog):
 
@@ -18,22 +16,20 @@ class Chess(commands.Cog):
         This command !challenge is going to be used in order to challenge a player to a game of chess
         it takes one argument, which is the player, so it should be used like this: !challenge @Player
         """
+
+        board = chess.Board()
+
         await ctx.send(
             f'{challenged.mention}, you\'ve been challenged to a chess game by'
             f'{ctx.message.author.mention}! Here\'s the board:\n```{board}```'
         )
 
         while True:
-            """
-            Game begins by asking the challenger's move, updating board and then showing the updated board
-            """
+            #  Game begins by asking the challenger's move, updating board and then showing the updated board
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
             board.push_san(msg.content)
             await ctx.send(f'```{board}```')
-
-            """
-            Asks for the challenged's move, updates board and then shows the updated board
-            """
+            #  Asks for the challenged's move, updates board and then shows the updated board
             msg2 = await self.bot.wait_for('message', check=lambda message: message.author == challenged)
             board.push_san(msg2.content)
             await ctx.send(f'```{board}```')
