@@ -1,6 +1,6 @@
 # ChessBot
 
-[![License:MIT](https://img.shields.io/github/license/Guilherme-Vasconcelos/ChessBot.svg?style=for-the-badge)](https://opensource.org/licenses/MIT) [![Discord:Online](https://img.shields.io/discord/571131331464134686.svg?style=for-the-badge&logo=discord)](https://discord.gg/HcTJsyd)
+[![License:GPL-3](https://img.shields.io/github/license/Guilherme-Vasconcelos/ChessBot.svg?style=for-the-badge)](https://opensource.org/licenses/GPL-3.0) [![Discord:Online](https://img.shields.io/discord/571131331464134686.svg?style=for-the-badge&logo=discord)](https://discord.gg/HcTJsyd)
 
 ![ChessBot Logo](images/logo.png)
 
