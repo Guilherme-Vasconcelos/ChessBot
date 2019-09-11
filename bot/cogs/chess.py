@@ -25,9 +25,8 @@ class Chess(commands.Cog):
         )
 
         board_message = await ctx.send(f'```{board}```')  # sends the board (also saves it on board_message)
-
+        player2_invalid_move = False
         while True:
-            player2_invalid_move = False
             if not player2_invalid_move:
                 #  if player 2 makes an invalid move, this block will not execute, thus making player 2 repeat his move
                 #  game begins by asking the challenger's move, updating board and then showing the updated board
@@ -43,13 +42,12 @@ class Chess(commands.Cog):
                 #  the line below edits bot's message in order to show the updated board and shows his move
                 await board_message.edit(content=f'```{board}```\n{ctx.author.mention} played {msg.content}')
                 await msg.delete()  # deletes player's message
-
             #  asks for the challenged's move, updates board and then shows the updated board
             #  the line below will get the player's move
             msg2 = await self.bot.wait_for('message', check=lambda message: message.author == challenged)
             try:
-                board.push_san(msg2.content)  # updates board
                 player2_invalid_move = False
+                board.push_san(msg2.content)  # updates board
             except ValueError:
                 await board_message.edit(content=f'```{board}```\n{challenged.mention} wait, '
                                          f'that\'s illegal! Please, make another move.')
