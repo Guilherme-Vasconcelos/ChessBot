@@ -46,19 +46,19 @@ class Chess(commands.Cog):
 
             #  asks for the challenged's move, updates board and then shows the updated board
             #  the line below will get the player's move
-            msg = await self.bot.wait_for('message', check=lambda message: message.author == challenged)
+            msg2 = await self.bot.wait_for('message', check=lambda message: message.author == challenged)
             try:
-                board.push_san(msg.content)  # updates board
+                board.push_san(msg2.content)  # updates board
                 player2_invalid_move = False
             except ValueError:
                 await board_message.edit(content=f'```{board}```\n{challenged.mention} wait, '
                                          f'that\'s illegal! Please, make another move.')
-                await msg.delete()
+                await msg2.delete()
                 player2_invalid_move = True
                 continue
             #  the line below edits bot's message in order to show the updated board and shows his move
-            await board_message.edit(content=f'```{board}```\n{challenged.mention} played {msg.content}')
-            await msg.delete()  # deletes player's message
+            await board_message.edit(content=f'```{board}```\n{challenged.mention} played {msg2.content}')
+            await msg2.delete()  # deletes player's message
 
 
 def setup(bot):
