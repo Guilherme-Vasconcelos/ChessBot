@@ -20,7 +20,7 @@ class Chess(commands.Cog):
         board = chess.Board()
 
         await ctx.send(
-            f'{challenged.mention}, you\'ve been challenged to a chess game by'
+            f'{challenged.mention}, you\'ve been challenged to a chess game by '
             f'{ctx.message.author.mention}! Here\'s the board:\n'
         )
 
