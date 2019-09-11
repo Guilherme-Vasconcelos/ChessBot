@@ -10,7 +10,7 @@ class Chess(commands.Cog):
         self.bot = bot
 
     @commands.has_permissions(manage_channels=True)
-    @commands.command(aliases=[])
+    @commands.command(aliases=['chalenge', 'challeng', 'fight', 'play', 'chaleng'])
     async def challenge(self, ctx: commands.Context, challenged: discord.Member):
         """
         This command !challenge is going to be used in order to challenge a player to a game of chess
@@ -31,7 +31,7 @@ class Chess(commands.Cog):
             msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)  # gets move
             board.push_san(msg.content)  # updates board
             #  the line below edits bot's message in order to show the updated board and shows his move
-            await board_message.edit(content=f'```{board}```\n{ctx.message.author.mention} played {msg.content}')
+            await board_message.edit(content=f'```{board}```\n{ctx.author.mention} played {msg.content}')
             await msg.delete()  # deletes player's message
 
             #  Asks for the challenged's move, updates board and then shows the updated board
