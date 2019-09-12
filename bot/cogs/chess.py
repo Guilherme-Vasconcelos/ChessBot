@@ -8,9 +8,10 @@ def check_for_draw(board: chess.Board) -> bool:
     """
     Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
     """
-    return any([board.is_insufficient_material(), board.can_claim_threefold_repetition(),
-                board.can_claim_fifty_moves(), board.is_stalemate()
-                ])
+    return any([
+        board.is_insufficient_material(), board.can_claim_threefold_repetition(),
+        board.can_claim_fifty_moves(), board.is_stalemate()
+    ])
 
 
 class Chess(commands.Cog):
