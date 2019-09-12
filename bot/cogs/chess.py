@@ -4,14 +4,6 @@ import discord
 from bot.bot_client import Bot
 
 
-def check_for_draw(board: chess.Board) -> bool:
-    """
-    Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
-    """
-    return any([board.is_insufficient_material, board.can_claim_threefold_repetition,
-                board.can_claim_fifty_moves, board.is_stalemate])
-
-
 class Chess(commands.Cog):
 
     def __init__(self, bot: Bot):
@@ -31,6 +23,14 @@ class Chess(commands.Cog):
             f'{challenged.mention}, you\'ve been challenged to a chess game by '
             f'{ctx.message.author.mention}! Here\'s the board:\n'
         )
+
+        def check_for_draw(board: chess.Board) -> bool:
+            """
+            Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
+            """
+            return any([board.is_insufficient_material(), board.can_claim_threefold_repetition(),
+                        board.can_claim_fifty_moves(), board.is_stalemate()
+                        ])
 
         board_message = await ctx.send(f'```{board}```')  # sends the board (also saves it on board_message)
         player2_invalid_move = False
@@ -53,7 +53,7 @@ class Chess(commands.Cog):
                 if check_for_draw(board):  # checks if the current position is a draw
                     await ctx.send('The game is a draw!')
                     break
-                elif board.is_checkmate:  # checks if the current position is checkmate
+                elif board.is_checkmate():  # checks if the current position is checkmate
                     await ctx.send(f'The game is over! The winner is {ctx.author.mention}.')
                     break
             #  asks for the challenged's move, updates board and then shows the updated board
@@ -74,7 +74,7 @@ class Chess(commands.Cog):
             if check_for_draw(board):  # checks if the current position is a draw
                 await ctx.send('The game is a draw!')
                 break
-            elif board.is_checkmate:  # checks if the current position is a checkmate
+            elif board.is_checkmate():  # checks if the current position is a checkmate
                 await ctx.send(f'The game is over! The winner is {challenged.mention}.')
                 break
 
