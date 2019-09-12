@@ -24,6 +24,19 @@ class Chess(commands.Cog):
             f'{ctx.message.author.mention}! Here\'s the board:\n'
         )
 
+        def check_for_mate(board: chess.Board) -> bool:
+            """
+            Function checks for checkmate
+            """
+            return board.is_checkmate()
+
+        def check_for_draw(board: chess.Board) -> bool:
+            """
+            Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
+            """
+            return (board.is_insufficient_material() or board.can_claim_threefold_repetition()
+                    or board.can_claim_fifty_moves() or board.is_stalemate())
+
         board_message = await ctx.send(f'```{board}```')  # sends the board (also saves it on board_message)
         player2_invalid_move = False
         while True:
@@ -42,6 +55,12 @@ class Chess(commands.Cog):
                 #  the line below edits bot's message in order to show the updated board and shows his move
                 await board_message.edit(content=f'```{board}```\n{ctx.author.mention} played {msg.content}')
                 await msg.delete()  # deletes player's message
+                if check_for_draw(board):  # checks if the current position is a draw
+                    await ctx.send('The game is a draw!')
+                    break
+                elif check_for_mate(board):  # checks if the current position is checkmate
+                    await ctx.send(f'The game is over! The winner is {ctx.author.mention}.')
+                    break
             #  asks for the challenged's move, updates board and then shows the updated board
             #  the line below will get the player's move
             msg2 = await self.bot.wait_for('message', check=lambda message: message.author == challenged)
@@ -57,6 +76,12 @@ class Chess(commands.Cog):
             #  the line below edits bot's message in order to show the updated board and shows his move
             await board_message.edit(content=f'```{board}```\n{challenged.mention} played {msg2.content}')
             await msg2.delete()  # deletes player's message
+            if check_for_draw(board):  # checks if the current position is a draw
+                await ctx.send('The game is a draw!')
+                break
+            elif check_for_mate(board):  # checks if the current position is a checkmate
+                await ctx.send(f'The game is over! The winner is {challenged.mention}.')
+                break
 
 
 def setup(bot):
