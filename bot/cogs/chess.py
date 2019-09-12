@@ -26,25 +26,44 @@ class Chess(commands.Cog):
         This command !challenge is going to be used in order to challenge a player to a game of chess
         it takes one argument, which is the player, so it should be used like this: !challenge @Player
         """
+        def check_for_valid_message1(message: discord.Message) -> bool:
+            """
+            This function will verify if the first, third, etc. messages during game are valid
+            i.e. it must either be a MOVE sent by the PLAYER 1, or a RESIGN message sent by any player
+            """
+            return message.author == ctx.author or message.content == 'resign'
+
+        def check_for_valid_message2(message: discord.Message) -> bool:
+            """
+            This function will verify if the second, fourth, etc. messages during game are valid
+            i.e. it must either be a MOVE sent by the PLAYER 2, or a RESIGN message sent by any player
+            """
+            return message.author == challenged or message.content == 'resign'
 
         board = chess.Board()  # creates an instance of Board class, which is going to be used during the game
 
         await ctx.send(  # sends a message to let the challenged know who challenged them
             f'{challenged.mention}, you\'ve been challenged to a chess game by '
-            f'{ctx.message.author.mention}! Here\'s the board:\n'
+            f'{ctx.message.author.mention}!\nYou can type resign in order to resign or draw in order to offer a draw!'
+            f'\nHere\'s the board:\n'
         )
 
         board_message = await ctx.send(f'```{board}```')  # sends the board (also saves it on board_message)
-        player2_invalid_move = False
+        player2_invalid_move = False  # checks if player 2 has made an invalid move
         while True:
             if not player2_invalid_move:
                 #  if player 2 makes an invalid move, this block will not execute, thus making player 2 repeat his move
                 #  game begins by asking the challenger's move, updating board and then showing the updated board
                 #  the line below will get the player's move
-                msg = await self.bot.wait_for('message', check=lambda message: message.author == ctx.author)
+                msg = await self.bot.wait_for('message', check=check_for_valid_message1)
+                if msg.content == 'resign':
+                    # if the message is 'resign' (sent by any player), the game will end
+                    await board_message.edit(content=f'```{board}```\n{msg.author.mention} resigns! The game is over!')
+                    break
                 try:
                     board.push_san(msg.content)  # updates board
                 except ValueError:
+                    # player 1 has made an illegal move
                     await board_message.edit(content=f'```{board}```\n{ctx.author.mention} wait, '
                                              f'that\'s illegal! Please, make another move.')
                     await msg.delete()
@@ -60,11 +79,16 @@ class Chess(commands.Cog):
                     break
             #  asks for the challenged's move, updates board and then shows the updated board
             #  the line below will get the player's move
-            msg2 = await self.bot.wait_for('message', check=lambda message: message.author == challenged)
+            msg2 = await self.bot.wait_for('message', check=check_for_valid_message2)
+            if msg2.content == 'resign':
+                # if the message is 'resign' (sent by any player), the game will end
+                await board_message.edit(content=f'```{board}```\n{msg2.author.mention} resigns! The game is over!')
+                break
             try:
                 player2_invalid_move = False
                 board.push_san(msg2.content)  # updates board
             except ValueError:
+                # player 2 has made an illegal move
                 await board_message.edit(content=f'```{board}```\n{challenged.mention} wait, '
                                          f'that\'s illegal! Please, make another move.')
                 await msg2.delete()
