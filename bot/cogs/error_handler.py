@@ -45,11 +45,10 @@ class CommandErrorHandler(commands.Cog):
             commands.BadArgument,
             commands.TooManyArguments,
         ]
-        command = None
-        arguments = None
+
         if any([isinstance(error, arg_error) for arg_error in arguments_error]):
             embed = discord.Embed(
-                title=f"Command '{ctx.command}' arguments:",
+                title=f"Command '{prefix}{ctx.command}' arguments:",
                 description="",
                 color=discord.Colour.red()
             )
