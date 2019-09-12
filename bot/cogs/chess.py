@@ -34,8 +34,8 @@ class Chess(commands.Cog):
             """
             Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
             """
-            return (board.is_insufficient_material() or board.can_claim_threefold_repetition()
-                    or board.can_claim_fifty_moves() or board.is_stalemate())
+            return any([board.is_insufficient_material, board.can_claim_threefold_repetition,
+                        board.can_claim_fifty_moves, board.is_pseudo_legal])
 
         board_message = await ctx.send(f'```{board}```')  # sends the board (also saves it on board_message)
         player2_invalid_move = False
