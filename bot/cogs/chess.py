@@ -24,12 +24,6 @@ class Chess(commands.Cog):
             f'{ctx.message.author.mention}! Here\'s the board:\n'
         )
 
-        def check_for_mate(board: chess.Board) -> bool:
-            """
-            Function checks for checkmate
-            """
-            return board.is_checkmate()
-
         def check_for_draw(board: chess.Board) -> bool:
             """
             Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
@@ -58,7 +52,7 @@ class Chess(commands.Cog):
                 if check_for_draw(board):  # checks if the current position is a draw
                     await ctx.send('The game is a draw!')
                     break
-                elif check_for_mate(board):  # checks if the current position is checkmate
+                elif board.is_checkmate:  # checks if the current position is checkmate
                     await ctx.send(f'The game is over! The winner is {ctx.author.mention}.')
                     break
             #  asks for the challenged's move, updates board and then shows the updated board
@@ -79,7 +73,7 @@ class Chess(commands.Cog):
             if check_for_draw(board):  # checks if the current position is a draw
                 await ctx.send('The game is a draw!')
                 break
-            elif check_for_mate(board):  # checks if the current position is a checkmate
+            elif board.is_checkmate:  # checks if the current position is a checkmate
                 await ctx.send(f'The game is over! The winner is {challenged.mention}.')
                 break
 
