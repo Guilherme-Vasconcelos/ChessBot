@@ -4,6 +4,15 @@ import discord
 from bot.bot_client import Bot
 
 
+def check_for_draw(board: chess.Board) -> bool:
+    """
+    Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
+    """
+    return any([board.is_insufficient_material(), board.can_claim_threefold_repetition(),
+                board.can_claim_fifty_moves(), board.is_stalemate()
+                ])
+
+
 class Chess(commands.Cog):
 
     def __init__(self, bot: Bot):
@@ -23,14 +32,6 @@ class Chess(commands.Cog):
             f'{challenged.mention}, you\'ve been challenged to a chess game by '
             f'{ctx.message.author.mention}! Here\'s the board:\n'
         )
-
-        def check_for_draw(board: chess.Board) -> bool:
-            """
-            Function checks for stalemate/insufficient material/threefold repetition/fifty moves rule
-            """
-            return any([board.is_insufficient_material(), board.can_claim_threefold_repetition(),
-                        board.can_claim_fifty_moves(), board.is_stalemate()
-                        ])
 
         board_message = await ctx.send(f'```{board}```')  # sends the board (also saves it on board_message)
         player2_invalid_move = False
