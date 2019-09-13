@@ -46,7 +46,7 @@ class Chess(commands.Cog):
             f'{challenged.mention}, you\'ve been challenged to a chess game by '
             f'{ctx.message.author.mention}!\nYou can type **`resign`** in order '
             f'to resign or **`draw`** in order to offer a draw!'
-            f'\nHere\'s the board:\n'
+            f'\nCheck the board below:\n'
         )
         embed = discord.Embed()  # creates embed
         embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # sets board image
