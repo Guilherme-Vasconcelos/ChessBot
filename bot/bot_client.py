@@ -6,7 +6,7 @@ from pathlib import Path
 import discord
 from discord.ext import commands
 
-from bot.orm.models import db
+from bot.orm.db import db
 
 
 class Bot(commands.Bot):
