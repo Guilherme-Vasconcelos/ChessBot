@@ -48,8 +48,10 @@ class Chess(commands.Cog):
             f'to resign or **`draw`** in order to offer a draw!'
             f'\nHere\'s the board:\n'
         )
+        embed = discord.Embed()  # creates embed
+        embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # sets board image
 
-        board_message = await ctx.send(f'```{board}```')  # sends the board (also saves it on board_message)
+        board_message = await ctx.send(embed=embed)  # sends the board (also saves it on board_message)
         player2_invalid_move = False  # checks if player 2 has made an invalid move
         while True:
             if not player2_invalid_move:
@@ -59,18 +61,21 @@ class Chess(commands.Cog):
                 msg = await self.bot.wait_for('message', check=check_for_valid_message1)
                 if msg.content.lower() == 'resign':
                     # if the message is 'resign' (sent by any player), the game will end
-                    await board_message.edit(content=f'```{board}```\n{msg.author.mention} resigns! The game is over!')
+                    embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
+                    await board_message.edit(content=f'{msg.author.mention} resigns! The game is over!', embed=embed)
                     break
                 try:
                     board.push_san(msg.content)  # updates board
                 except ValueError:
                     # player 1 has made an illegal move
-                    await board_message.edit(content=f'```{board}```\n{ctx.author.mention} wait, '
-                                             f'that\'s illegal! Please, make another move.')
+                    embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
+                    await board_message.edit(content=f'{ctx.author.mention} wait, '
+                                             f'that\'s illegal! Please, make another move.', embed=embed)
                     await msg.delete()
                     continue
                 #  the line below edits bot's message in order to show the updated board and shows his move
-                await board_message.edit(content=f'```{board}```\n{ctx.author.mention} played {msg.content}')
+                embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
+                await board_message.edit(content=f'{ctx.author.mention} played {msg.content}', embed=embed)
                 await msg.delete()  # deletes player's message
                 if check_for_draw(board):  # checks if the current position is a draw
                     await ctx.send('The game is a draw!')
@@ -83,20 +88,23 @@ class Chess(commands.Cog):
             msg2 = await self.bot.wait_for('message', check=check_for_valid_message2)
             if msg2.content.lower() == 'resign':
                 # if the message is 'resign' (sent by any player), the game will end
-                await board_message.edit(content=f'```{board}```\n{msg2.author.mention} resigns! The game is over!')
+                embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
+                await board_message.edit(content=f'{msg2.author.mention} resigns! The game is over!', embed=embed)
                 break
             try:
                 player2_invalid_move = False
                 board.push_san(msg2.content)  # updates board
             except ValueError:
                 # player 2 has made an illegal move
-                await board_message.edit(content=f'```{board}```\n{challenged.mention} wait, '
-                                         f'that\'s illegal! Please, make another move.')
+                embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
+                await board_message.edit(content=f'{challenged.mention} wait, '
+                                         f'that\'s illegal! Please, make another move.', embed=embed)
                 await msg2.delete()
                 player2_invalid_move = True
                 continue
             #  the line below edits bot's message in order to show the updated board and shows his move
-            await board_message.edit(content=f'```{board}```\n{challenged.mention} played {msg2.content}')
+            embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
+            await board_message.edit(content=f'{challenged.mention} played {msg2.content}', embed=embed)
             await msg2.delete()  # deletes player's message
             if check_for_draw(board):  # checks if the current position is a draw
                 await ctx.send('The game is a draw!')
