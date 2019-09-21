@@ -13,8 +13,9 @@ class Help(commands.Cog):
     async def help(self, ctx: commands.Context):
         embed_help = discord.Embed(title='Hello! Here are all my commands:', color=0x0473b3)
         embed_help.add_field(name='!help', value='Lists all available commands')
-        embed_help.add_field(name='!challenge [player]',
-                             value='Starts a game against [player]. Remember to mention them!'
+        embed_help.add_field(
+            name='!challenge [player]',
+            value='Starts a game against [player]. Remember to mention them!'
                              )
         await ctx.send(embed=embed_help)
 
