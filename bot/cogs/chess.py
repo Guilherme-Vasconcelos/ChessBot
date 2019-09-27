@@ -49,7 +49,7 @@ class Chess(commands.Cog):
         await ctx.send(  # sends a message to let the challenged know who challenged them
             f'{challenged.mention}, you\'ve been challenged to a chess game by '
             f'{ctx.message.author.mention}!\n'
-            f'\nCheck out the board below:\n'
+            f'Check out the board below:\n'
         )
 
         embed = discord.Embed(color=0x0473b3)  # creates embed
