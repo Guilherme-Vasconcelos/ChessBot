@@ -48,12 +48,14 @@ class Chess(commands.Cog):
 
         await ctx.send(  # sends a message to let the challenged know who challenged them
             f'{challenged.mention}, you\'ve been challenged to a chess game by '
-            f'{ctx.message.author.mention}!\nYou can type **`resign`** in order '
-            f'to resign or **`draw`** in order to offer a draw!'
-            f'\nCheck the board below:\n'
+            f'{ctx.message.author.mention}!\n'
+            f'\nCheck out the board below:\n'
         )
-        embed = discord.Embed()  # creates embed
+
+        embed = discord.Embed(color=0x0473b3)  # creates embed
         embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # sets board image
+        embed.add_field(name='Special words:', value='\n**`resign`**: resigns the game'
+                        f'\n**`draw`**: offers/accepts draw')
 
         board_message = await ctx.send(embed=embed)  # sends the board (also saves it on board_message)
         player2_invalid_move = False  # checks if player 2 has made an invalid move
