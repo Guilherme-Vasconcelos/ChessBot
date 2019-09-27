@@ -103,7 +103,8 @@ class Chess(commands.Cog):
                     continue
                 #  the line below edits bot's message in order to show the updated board and shows his move
                 embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
-                await board_message.edit(content=f'{ctx.author.mention} played {msg.content}', embed=embed)
+                embed.set_footer(text=f'Last move: {msg.content} by white')
+                await board_message.edit(embed=embed)
                 await msg.delete()  # deletes player's message
                 if check_for_draw(board):  # checks if the current position is a draw
                     await ctx.send('The game is a draw!')
@@ -155,7 +156,8 @@ class Chess(commands.Cog):
                 continue
             #  the line below edits bot's message in order to show the updated board and shows his move
             embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
-            await board_message.edit(content=f'{challenged.mention} played {msg2.content}', embed=embed)
+            embed.set_footer(text=f'Last move: {msg2.content} by black')
+            await board_message.edit(embed=embed)
             await msg2.delete()  # deletes player's message
             if check_for_draw(board):  # checks if the current position is a draw
                 await ctx.send('The game is a draw!')
