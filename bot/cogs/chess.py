@@ -30,15 +30,19 @@ class Chess(commands.Cog):
             """
             This function will verify if the first, third, etc. messages during game are valid
             i.e. it must either be a MOVE sent by the PLAYER 1, or a RESIGN message sent by any player
+            or a DRAW message sent by any player
             """
-            return message.author == ctx.author or message.content.lower() == 'resign'
+            return (message.author == ctx.author or
+                    message.content.lower() == 'resign' or message.content.lower() == 'draw')
 
         def check_for_valid_message2(message: discord.Message) -> bool:
             """
             This function will verify if the second, fourth, etc. messages during game are valid
             i.e. it must either be a MOVE sent by the PLAYER 2, or a RESIGN message sent by any player
+            or a DRAW message sent by any player
             """
-            return message.author == challenged or message.content.lower() == 'resign'
+            return (message.author == challenged or
+                    message.content.lower() == 'resign' or message.content.lower() == 'draw')
 
         board = chess.Board()  # creates an instance of Board class, which is going to be used during the game
 
@@ -53,8 +57,10 @@ class Chess(commands.Cog):
 
         board_message = await ctx.send(embed=embed)  # sends the board (also saves it on board_message)
         player2_invalid_move = False  # checks if player 2 has made an invalid move
+        player2_refused_draw = False
+
         while True:
-            if not player2_invalid_move:
+            if not (player2_invalid_move or player2_refused_draw):
                 #  if player 2 makes an invalid move, this block will not execute, thus making player 2 repeat his move
                 #  game begins by asking the challenger's move, updating board and then showing the updated board
                 #  the line below will get the player's move
@@ -64,6 +70,26 @@ class Chess(commands.Cog):
                     embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
                     await board_message.edit(content=f'{msg.author.mention} resigns! The game is over!', embed=embed)
                     break
+                if msg.content.lower() == 'draw':
+                    # if the message is 'draw' (sent by any player), the bot must wait for the other player's response
+                    await board_message.edit(content=f'{msg.author} offers a draw! Type `draw`'
+                                             f'in order to accept it or anything else to decline it!', embed=embed)
+                    if msg.author == ctx.author:
+                        response = await self.bot.wait_for('message', check=lambda m: m.author == challenged)
+                        if response.content.lower() == 'draw':
+                            await board_message.edit(content=f'The game is a draw!', embed=embed)
+                            break
+                        else:
+                            await board_message.edit(content=f'Draw declined!', embed=embed)
+                            continue
+                    elif msg.author == challenged:
+                        response = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author)
+                        if response.content.lower() == 'draw':
+                            await board_message.edit(content=f'The game is a draw!', embed=embed)
+                            break
+                        else:
+                            await board_message.edit(content=f'Draw declined!', embed=embed)
+                            continue
                 try:
                     board.push_san(msg.content)  # updates board
                 except ValueError:
@@ -91,8 +117,31 @@ class Chess(commands.Cog):
                 embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
                 await board_message.edit(content=f'{msg2.author.mention} resigns! The game is over!', embed=embed)
                 break
+            if msg2.content.lower() == 'draw':
+                # if the message is 'draw' (sent by any player), the bot must wait for the other player's response
+                await board_message.edit(content=f'{msg2.author} offers a draw! Type `draw`'
+                                         f'in order to accept it or anything else to decline it!', embed=embed)
+                if msg2.author == ctx.author:
+                    response = await self.bot.wait_for('message', check=lambda m: m.author == challenged)
+                    if response.content.lower() == 'draw':
+                        await board_message.edit(content=f'The game is a draw!', embed=embed)
+                        break
+                    else:
+                        await board_message.edit(content=f'Draw declined!', embed=embed)
+                        player2_refused_draw = True
+                        continue
+                elif msg2.author == challenged:
+                    response = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author)
+                    if response.content.lower() == 'draw':
+                        await board_message.edit(content=f'The game is a draw!', embed=embed)
+                        break
+                    else:
+                        await board_message.edit(content=f'Draw declined!', embed=embed)
+                        player2_refused_draw = True
+                        continue
             try:
                 player2_invalid_move = False
+                player2_refused_draw = False
                 board.push_san(msg2.content)  # updates board
             except ValueError:
                 # player 2 has made an illegal move
