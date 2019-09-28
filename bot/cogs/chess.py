@@ -74,8 +74,8 @@ class Chess(commands.Cog):
                     break
                 if msg.content.lower() == 'draw':
                     # if the message is 'draw' (sent by any player), the bot must wait for the other player's response
-                    await board_message.edit(content=f'{msg.author} offers a draw! Type `draw`'
-                                             f'in order to accept it or anything else to decline it!', embed=embed)
+                    await board_message.edit(content=f'{msg.author.mention} offers a draw! Type `draw`'
+                                             f' in order to accept it or anything else to decline it!', embed=embed)
                     if msg.author == ctx.author:
                         response = await self.bot.wait_for('message', check=lambda m: m.author == challenged)
                         if response.content.lower() == 'draw':
@@ -83,6 +83,8 @@ class Chess(commands.Cog):
                             break
                         else:
                             await board_message.edit(content=f'Draw declined!', embed=embed)
+                            await response.delete()
+                            await msg.delete()
                             continue
                     elif msg.author == challenged:
                         response = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author)
@@ -91,6 +93,8 @@ class Chess(commands.Cog):
                             break
                         else:
                             await board_message.edit(content=f'Draw declined!', embed=embed)
+                            await response.delete()
+                            await msg.delete()
                             continue
                 try:
                     board.push_san(msg.content)  # updates board
@@ -122,8 +126,8 @@ class Chess(commands.Cog):
                 break
             if msg2.content.lower() == 'draw':
                 # if the message is 'draw' (sent by any player), the bot must wait for the other player's response
-                await board_message.edit(content=f'{msg2.author} offers a draw! Type `draw`'
-                                         f'in order to accept it or anything else to decline it!', embed=embed)
+                await board_message.edit(content=f'{msg2.author.mention} offers a draw! Type `draw`'
+                                         f' in order to accept it or anything else to decline it!', embed=embed)
                 if msg2.author == ctx.author:
                     response = await self.bot.wait_for('message', check=lambda m: m.author == challenged)
                     if response.content.lower() == 'draw':
@@ -131,6 +135,8 @@ class Chess(commands.Cog):
                         break
                     else:
                         await board_message.edit(content=f'Draw declined!', embed=embed)
+                        await msg2.delete()
+                        await response.delete()
                         player2_refused_draw = True
                         continue
                 elif msg2.author == challenged:
@@ -140,6 +146,8 @@ class Chess(commands.Cog):
                         break
                     else:
                         await board_message.edit(content=f'Draw declined!', embed=embed)
+                        await msg2.delete()
+                        await response.delete()
                         player2_refused_draw = True
                         continue
             try:
