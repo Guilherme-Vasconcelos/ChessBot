@@ -59,7 +59,7 @@ class Chess(commands.Cog):
 
         board_message = await ctx.send(embed=embed)  # sends the board (also saves it on board_message)
         player2_invalid_move = False  # checks if player 2 has made an invalid move
-        player2_refused_draw = False
+        player2_refused_draw = False  # checks if player 2 has refused a draw
 
         while True:
             if not (player2_invalid_move or player2_refused_draw):
@@ -69,22 +69,25 @@ class Chess(commands.Cog):
                 msg = await self.bot.wait_for('message', check=check_for_valid_message1)
                 if msg.content.lower() == 'resign':
                     # if the message is 'resign' (sent by any player), the game will end
-                    embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
-                    await board_message.edit(content=f'{msg.author.mention} resigns! The game is over!', embed=embed)
+                    await ctx.send(f'{msg.author.mention} resigns! The game is over!')
                     break
                 if msg.content.lower() == 'draw':
                     # if the message is 'draw' (sent by any player), the bot must wait for the other player's response
                     await board_message.edit(content=f'{msg.author.mention} offers a draw! Type `draw`'
                                              f' in order to accept it or anything else to decline it!', embed=embed)
+                    bot_message = await ctx.send(f'{msg.author.mention} offers a draw! Type `draw` '
+                                                 f'in order to accept it or anything else to decline it!')
                     if msg.author == ctx.author:  # if message's author is equal to whoever sent the challenge
                         # waits for other player's response
                         response = await self.bot.wait_for('message', check=lambda m: m.author == challenged)
                         if response.content.lower() == 'draw':  # if the response is draw then the game draws
                             await board_message.edit(content=f'The game is a draw!', embed=embed)
+                            await ctx.send('The game is a draw!')
                             break
                         else:
                             # if the response is not draw then the game continues
                             await board_message.edit(content=f'Draw declined!', embed=embed)
+                            await bot_message.delete()
                             await response.delete()
                             await msg.delete()
                             continue
@@ -93,10 +96,12 @@ class Chess(commands.Cog):
                         response = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author)
                         if response.content.lower() == 'draw':  # if the response is draw then the game draws
                             await board_message.edit(content=f'The game is a draw!', embed=embed)
+                            await ctx.send('The game is a draw!')
                             break
                         else:
                             # if the response is not draw then the game continues
                             await board_message.edit(content=f'Draw declined!', embed=embed)
+                            await bot_message.delete()
                             await response.delete()
                             await msg.delete()
                             continue
@@ -125,23 +130,26 @@ class Chess(commands.Cog):
             msg2 = await self.bot.wait_for('message', check=check_for_valid_message2)
             if msg2.content.lower() == 'resign':
                 # if the message is 'resign' (sent by any player), the game will end
-                embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
-                await board_message.edit(content=f'{msg2.author.mention} resigns! The game is over!', embed=embed)
+                await ctx.send(f'{msg2.author.mention} resigns! The game is over!')
                 break
             if msg2.content.lower() == 'draw':
                 # if the message is 'draw' (sent by any player), the bot must wait for the other player's response
                 await board_message.edit(content=f'{msg2.author.mention} offers a draw! Type `draw`'
                                          f' in order to accept it or anything else to decline it!', embed=embed)
+                bot_message = await ctx.send(f'{msg2.author.mention} offers a draw! Type `draw` '
+                                             f'in order to accept it or anything else to decline it!')
                 if msg2.author == ctx.author:  # if message's author is equal to whoever sent the challenge
                     # gets response from the other player
                     response = await self.bot.wait_for('message', check=lambda m: m.author == challenged)
                     if response.content.lower() == 'draw':  # if response is draw then the game draws
                         await board_message.edit(content=f'The game is a draw!', embed=embed)
+                        await ctx.send('The game is a draw!')
                         break
                     else:  # if response is not draw then the game continues
                         await board_message.edit(content=f'Draw declined!', embed=embed)
                         await msg2.delete()
                         await response.delete()
+                        await bot_message.delete()
                         player2_refused_draw = True
                         continue
                 elif msg2.author == challenged:  # if message's author is equal to challenged player
@@ -149,11 +157,13 @@ class Chess(commands.Cog):
                     response = await self.bot.wait_for('message', check=lambda m: m.author == ctx.author)
                     if response.content.lower() == 'draw':  # if response is draw then the game draws
                         await board_message.edit(content=f'The game is a draw!', embed=embed)
+                        await ctx.send('The game is a draw!')
                         break
                     else:  # if response is not draw then the game continues
                         await board_message.edit(content=f'Draw declined!', embed=embed)
                         await msg2.delete()
                         await response.delete()
+                        await bot_message.delete()
                         player2_refused_draw = True
                         continue
             try:
