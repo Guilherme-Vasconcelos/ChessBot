@@ -19,7 +19,7 @@ class Help(commands.Cog):
         embed_help.add_field(name='!help', value='Lists all available commands')  # help command
         embed_help.add_field(  # play command
             name='!play [white_player] [black_player]',
-            value='Starts a game against between [white_player] '
+            value='Starts a game between [white_player] '
                   'and [black_player].\nRemember to mention them and not to include the square brackets!'
                   '\nUsage example: !play @Paul @Lily'
                              )
