@@ -33,6 +33,9 @@ class Chess(commands.Cog):
         This command !play is going to be used in order to start a game of chess between both players.
         First name is white, second name is black. It should be used like this: !play @Player1 @Player2
         """
+        if ctx.author not in (white_player, black_player):
+            return await ctx.send('You can only start a game if you are a player yourself.')
+
         def check_white_move(message: discord.Message) -> bool:
             """
             This function will verify if the first, third, etc. messages during game are valid
