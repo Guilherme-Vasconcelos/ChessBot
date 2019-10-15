@@ -95,8 +95,8 @@ class CommandErrorHandler(commands.Cog):
 
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(
-                f"You already used this comman recently. "
-                f"Wait another {error.retry_after:.1f}s to use it again"
+                f"You already used this command recently. "
+                f"Wait another {error.retry_after:.1f}s to use it again."
             )
 
         elif isinstance(error, commands.BotMissingPermissions):
