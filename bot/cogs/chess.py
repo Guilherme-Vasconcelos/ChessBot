@@ -119,7 +119,7 @@ class Chess(commands.Cog):
                 except ValueError:
                     # player 1 has made an illegal move
                     embed.set_image(url=f'http://www.fen-to-image.com/image/{board.fen().split()[0]}')  # updates image
-                    await board_message.edit(content=self.illegal_msg(ctx.author), embed=embed)
+                    await board_message.edit(content=self.illegal_msg(white_player), embed=embed)
                     await white_msg.delete()
                     continue
 
