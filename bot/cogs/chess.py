@@ -26,6 +26,8 @@ class Chess(commands.Cog):
     def game_over_msg(self, winner: discord.Member) -> str:
         return f'The game is over! The winner is {winner.mention}.'
 
+    @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.user)
     @commands.has_permissions(manage_channels=True)
     @commands.command(aliases=['chalenge', 'challeng', 'fight', 'challenge', 'chaleng'])
     async def play(self, ctx: commands.Context, white_player: discord.Member, black_player: discord.Member):
