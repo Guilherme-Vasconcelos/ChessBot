@@ -35,3 +35,4 @@ A discord Bot made with Python to play Chess with others on Discord.
 - `$ python bot.py`
 
 ***
+
