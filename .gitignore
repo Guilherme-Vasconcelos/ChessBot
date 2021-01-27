@@ -113,5 +113,5 @@ db_credentials.json
 .idea/
 .vscode/
 
-# Database files
+# Database file
 *.db
